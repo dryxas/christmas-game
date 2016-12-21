@@ -13,6 +13,7 @@ var gameDuration = 30;
 var gameStarted = false;
 var gameEnded = false;
 var startText;
+var highScore = 0;
 //var source;
 //var eglute;
 
@@ -130,7 +131,9 @@ function draw() {
     textSize(40);
     fill (255, 200);
     textAlign(CENTER);
-    text('Your score: ' + score, width/2, 200);
+    text('Your score: ' + score, width/2, 100);
+    textSize(32);
+    text('Highscore: ' + score, width/2, 200);
   }
 
 
@@ -192,6 +195,9 @@ function startGame() {
 function endGame() {
   gameStarted = false;
   gameEnded = true;
+  if (highScore < score) {
+    highScore = score;
+  }
 }
 
 function StartText() {
