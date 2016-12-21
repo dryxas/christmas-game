@@ -10,10 +10,12 @@ var pointerBall;
 var score = 0;
 var jsFps = 0;
 var gameDuration = 30;
+var currentDuration = 0;
 var gameStarted = false;
 var gameEnded = false;
 var startText;
 var highScore = 0;
+var timeCounter;
 //var source;
 //var eglute;
 
@@ -122,8 +124,8 @@ function draw() {
     fill(0, 102, 153);
     text('Score: ' + score, 100, 40);
 
-    if (gameDuration > 0) {
-      text(gameDuration + 's', width - 80, 40);
+    if (currentDuration > 0) {
+      text(currentDuration + 's', width - 80, 40);
     } else {
       endGame();
     }
@@ -133,18 +135,18 @@ function draw() {
     textAlign(CENTER);
     text('Your score: ' + score, width/2, 100);
     textSize(32);
-    text('Highscore: ' + score, width/2, 200);
+    text('Highscore: ' + highScore, width/2, 200);
   }
 
-
+  noStroke();
+  fill(255, 150);
+  //image(pointerBall, x, y, 30, 30);
+  ellipse(x, y, 15, 15);
 
   for (var i = zaisliukai.length - 1; i >= 0 ; i--) {
     zaisliukai[i].update();
     zaisliukai[i].show();
-    //noStroke();
-    //fill(255, 150);
-    image(pointerBall, x, y, 30, 30);
-    //ellipse(x, y, 5, 5);
+
 
     if (zaisliukai[i].checkHover(x, y)) {
       zaisliukai[i].expload();
@@ -181,12 +183,12 @@ function draw() {
 
 function startGame() {
   score = 0;
-  gameDuration = 30;
+  currentDuration = gameDuration;
   gameStarted = true;
   gameEnded = false;
-  var interval = setInterval(function() {
-    gameDuration--;
-    if (gameDuration == 0) {
+  timeCounter = setInterval(function() {
+    currentDuration--;
+    if (currentDuration == 0) {
       endGame();
     }
   }, 1000);
@@ -195,6 +197,7 @@ function startGame() {
 function endGame() {
   gameStarted = false;
   gameEnded = true;
+  clearInterval(timeCounter);
   if (highScore < score) {
     highScore = score;
   }
