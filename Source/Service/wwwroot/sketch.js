@@ -6,6 +6,7 @@ var zaisliukai = [];
 var maxZaisliuku = 6;
 var snowflake;
 var tree;
+var pointerBall;
 var score = 0;
 var jsFps = 0;
 var gameDuration = 30;
@@ -18,6 +19,7 @@ var startText;
 function preload() {
   snowflake = loadImage("snowflake_large.png");
   tree = loadImage("tree.gif");
+  pointerBall = loadImage("ball.png");
 }
 
 function setup() {
@@ -136,9 +138,10 @@ function draw() {
   for (var i = zaisliukai.length - 1; i >= 0 ; i--) {
     zaisliukai[i].update();
     zaisliukai[i].show();
-    noStroke();
-    fill(255, 150);
-    ellipse(x, y, 5, 5);
+    //noStroke();
+    //fill(255, 150);
+    image(pointerBall, x, y, 30, 30);
+    //ellipse(x, y, 5, 5);
 
     if (zaisliukai[i].checkHover(x, y)) {
       zaisliukai[i].expload();
@@ -197,7 +200,8 @@ function StartText() {
   this.w = 200;
   this.h = 100;
   this.x = width/2 - this.w/2;
-  this.y = height - 200;
+  this.y = height - 110;
+  this.fontsize = 40;
 
 
   this.show = function(passedText) {
@@ -205,11 +209,11 @@ function StartText() {
     stroke(255);
     rect(this.x, this.y, this.w, this.h, 5);
 
-    textSize(40);
+    textSize(this.fontsize);
     fill(0, 102, 153);
     textAlign(CENTER);
     //debugger;
-    text(passedText, width/2, height - 140);
+    text(passedText, width/2, this.y + this.h / 2 + this.fontsize / 4);
   }
 
   this.hovered = function() {
