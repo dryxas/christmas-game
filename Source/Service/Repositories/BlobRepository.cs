@@ -20,14 +20,14 @@
         public BlobRepository()
         {
             var videoCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            this.videoCaptureDevice = new VideoCaptureDevice(videoCaptureDevices[2].MonikerString);
+            this.videoCaptureDevice = new VideoCaptureDevice(videoCaptureDevices[0].MonikerString);
             var videoCapabilities = this.videoCaptureDevice.VideoCapabilities;
             int len = this.videoCaptureDevice.VideoCapabilities.Length;
             for (int i = 0; i < len; i++)
             {
                 System.Console.WriteLine("i={0} FrameSize={1}", i.ToString(), this.videoCaptureDevice.VideoCapabilities[i].FrameSize.ToString());
             }
-            this.videoCaptureDevice.VideoResolution = videoCapabilities[17];
+            this.videoCaptureDevice.VideoResolution = videoCapabilities[4];
             this.videoCaptureDevice.NewFrame += this.HandleNewFrame;
             this.videoCaptureDevice.Start();
 

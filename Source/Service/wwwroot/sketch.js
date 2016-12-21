@@ -8,8 +8,10 @@ var snowflake;
 var tree;
 var score = 0;
 var jsFps = 0;
-var gameDuration = 60;
+var gameDuration = 30;
 var gameStarted = false;
+var gameEnded = false;
+var startText;
 //var source;
 //var eglute;
 
@@ -47,22 +49,23 @@ function setup() {
 
   createCanvas(1280, 720);
   zaisliukai.push(new Zaisliukas());
-  startGame();
+  startText = new StartText();
+  //startGame();
   //eglute = new Eglute();
 
-  var lastChange = new Date;
+  //var lastChange = new Date;
   var source = new EventSource("http://localhost:5000/api/blobs");
   source.addEventListener("change", function () {
 
 
-      var thisLoop = new Date;
-      if (thisLoop - lastChange < 500) {
-        count++;
-      } else {
-        document.getElementById("count").innerHTML = 'Changes: ' + count * 2 + ' fps';
-        count = 0;
-        lastChange = thisLoop;
-      }
+      // var thisLoop = new Date;
+      // if (thisLoop - lastChange < 500) {
+      //   count++;
+      // } else {
+      //   document.getElementById("count").innerHTML = 'Changes: ' + count * 2 + ' fps';
+      //   count = 0;
+      //   lastChange = thisLoop;
+      // }
 
       //count++;
       //debugger;
@@ -74,47 +77,60 @@ function setup() {
         y = map(y, 0, 720, 0, height);
       }
       //count++;
-      document.getElementById("result").innerHTML = event.data;
+      //document.getElementById("result").innerHTML = event.data;
   });
 }
 
-var lastLoop = new Date;
+//var lastLoop = new Date;
 
 function draw() {
   background(0);
-  var thisLoop = new Date;
-  if (thisLoop - lastLoop < 500) {
-    jsFps++;
-  } else {
-    document.getElementById("jsFps").innerHTML = 'JS: ' + jsFps * 2 + ' fps';
-    jsFps = 0;
-    lastLoop = thisLoop;
-  }
+
+  // var thisLoop = new Date;
+  // if (thisLoop - lastLoop < 500) {
+  //   jsFps++;
+  // } else {
+  //   document.getElementById("jsFps").innerHTML = 'JS: ' + jsFps * 2 + ' fps';
+  //   jsFps = 0;
+  //   lastLoop = thisLoop;
+  // }
 
 
   image(tree, width/2, height/2);
+  if (!gameStarted) {
+    startText.show('Start');
+
+  }
+  if (startText.hovered() && !gameStarted) {
+    //debugger;
+    startGame();
+  }
+
   //eglute.show();
 
   if ((random(0, 1) < 0.03 && zaisliukai.length < maxZaisliuku) || zaisliukai.length == 0) {
     zaisliukai.push(new Zaisliukas());
   }
 
+
+
   if (gameStarted) {
     textSize(24);
     fill(0, 102, 153);
-    text('Score: ' + score, 10, 40);
+    text('Score: ' + score, 100, 40);
 
     if (gameDuration > 0) {
       text(gameDuration + 's', width - 80, 40);
     } else {
-      textSize(40);
-      fill (255, 200);
-      textAlign(CENTER);
-      text('Your score: ' + score, width/2, 200);
+      endGame();
     }
-
-
+  } else if (gameEnded) {
+    textSize(40);
+    fill (255, 200);
+    textAlign(CENTER);
+    text('Your score: ' + score, width/2, 200);
   }
+
 
 
   for (var i = zaisliukai.length - 1; i >= 0 ; i--) {
@@ -159,8 +175,9 @@ function draw() {
 
 function startGame() {
   score = 0;
-  gameDuration = 60;
+  gameDuration = 30;
   gameStarted = true;
+  gameEnded = false;
   var interval = setInterval(function() {
     gameDuration--;
     if (gameDuration == 0) {
@@ -171,5 +188,37 @@ function startGame() {
 
 function endGame() {
   gameStarted = false;
+  gameEnded = true;
+}
+
+function StartText() {
+
+
+  this.w = 200;
+  this.h = 100;
+  this.x = width/2 - this.w/2;
+  this.y = height - 200;
+
+
+  this.show = function(passedText) {
+    noFill();
+    stroke(255);
+    rect(this.x, this.y, this.w, this.h, 5);
+
+    textSize(40);
+    fill(0, 102, 153);
+    textAlign(CENTER);
+    //debugger;
+    text(passedText, width/2, height - 140);
+  }
+
+  this.hovered = function() {
+    //debugger;
+    if (x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 }
